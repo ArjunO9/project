@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #FFD700;
+  --primary-light: #FFE44D;
+  --primary-dark: #FFC000;
+  --secondary: #1A237E;
+  --secondary-light: #303F9F;
+  --secondary-dark: #0D1642;
+  --accent: #FF6B6B;
+  --accent-light: #FF8E8E;
+  --accent-dark: #FF4848;
+  --background: #F8F9FA;
+  --text: #2C3E50;
+  --gray-light: #F5F5F5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-['Poppins'] text-[var(--text)] bg-[var(--background)];
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-['Montserrat'] font-bold text-[var(--secondary)];
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+  
+  p {
+    @apply leading-relaxed text-lg;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  .section {
+    @apply py-16 md:py-20 lg:py-24;
+  }
+  
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95;
+  }
+  
+  .btn-primary {
+    @apply bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-[var(--secondary)] shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-[var(--secondary)] hover:bg-[var(--secondary-light)] text-white shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-accent {
+    @apply bg-[var(--accent)] hover:bg-[var(--accent-dark)] text-white shadow-lg hover:shadow-xl;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2;
+  }
+  
+  .navbar-link {
+    @apply text-base font-medium px-4 py-2 rounded-lg transition-all duration-200 hover:bg-opacity-10;
+  }
+  
+  .navbar-link-active {
+    @apply bg-[var(--primary)] text-[var(--secondary)] font-bold;
+  }
+  
+  .dropdown {
+    @apply absolute right-0 mt-2 w-56 rounded-xl shadow-xl py-2 bg-white ring-1 ring-black ring-opacity-5 z-50 transform transition-all duration-300;
+  }
+  
+  .dropdown-item {
+    @apply px-4 py-2 text-sm text-[var(--text)] hover:bg-[var(--primary-light)] hover:text-[var(--secondary)] transition-colors duration-200;
+  }
+  
+  .process-step {
+    @apply bg-white rounded-xl p-6 cursor-pointer transition-all duration-300 border-2 border-transparent hover:border-[var(--primary)] hover:shadow-xl transform hover:-translate-y-2;
+  }
+  
+  .process-step.active {
+    @apply border-[var(--primary)] bg-[var(--primary-light)];
+  }
+  
+  .review-card {
+    @apply bg-white rounded-xl p-6 shadow-lg transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2;
+  }
+  
+  .map-highlight {
+    @apply fill-[var(--primary)] stroke-[var(--secondary)] stroke-2 transition-all duration-300 hover:fill-[var(--primary-dark)];
+  }
+  
+  .tiles-theme {
+    --tiles-primary: #FF6B6B;
+    --tiles-secondary: #4ECDC4;
+    --tiles-accent: #45B7AF;
+    --tiles-dark: #2C3E50;
+  }
+}
+
+/* Special animations */
+.hover-scale {
+  @apply transition-all duration-300 transform hover:scale-105 hover:shadow-xl;
+}
+
+/* Float Quote Button */
+.float-quote-btn {
+  @apply fixed bottom-6 right-6 z-50 btn btn-primary shadow-xl rounded-full p-4 flex items-center space-x-2;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[var(--background)];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[var(--primary)] rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[var(--primary-dark)];
+}
+
+/* ISI Logo styles */
+.isi-logo {
+  @apply fixed top-4 left-4 z-50 bg-white rounded-full p-2 shadow-lg;
+}
+
+/* Manufacturing Process */
+.process-container {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+}
+
+.process-steps {
+  @apply space-y-4;
+}
+
+.process-video {
+  @apply sticky top-24 rounded-xl overflow-hidden shadow-xl;
+  height: calc(100vh - 200px);
+}
+
+/* Map styles */
+.india-map-container {
+  @apply relative w-full h-[600px] bg-white rounded-xl shadow-lg p-6;
+}
+
+.map-legend {
+  @apply absolute bottom-4 right-4 bg-white rounded-lg shadow-md p-4;
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+  .process-container {
+    @apply grid-cols-1;
+  }
+  
+  .process-video {
+    @apply static h-64;
+  }
+}
