@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Map } from 'lucide-react'; 
+import { Map } from 'lucide-react';
 import ReviewCard from '../components/ui/ReviewCard';
 import { markets } from '../data/markets';
 import { reviews } from '../data/reviews';
 
-// Type declarations for react-simple-maps
+// Define the Market interface to match your data structure
 interface Market {
   name: string;
   type: 'india' | 'abroad';
@@ -13,26 +13,6 @@ interface Market {
   coordinates: [number, number];
   country: string;
 }
-
-
-interface GeoFeature {
-  rsmKey: string;
-  properties: Record<string, unknown>;
-}
-
-interface GeographiesChildProps {
-  geographies: GeoFeature[];
-}
-
-interface MarketLocation {
-  id: string;
-  name: string;
-  type: 'india' | 'abroad';
-  coordinates: [number, number];
-  country: string;
-}
-
-const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
 const MarketExpansionPage: React.FC = () => {
   const [hoveredMarket, setHoveredMarket] = useState<string | null>(null);
@@ -74,7 +54,7 @@ const MarketExpansionPage: React.FC = () => {
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {markets.map((market) => (
                   <div
-                    key={market.name} {/* Using name as key since id might not exist */}
+                    key={market.name} 
                     className={`p-2 rounded cursor-pointer transition-colors ${
                       selectedMarket?.name === market.name ? 'bg-blue-100' : 'hover:bg-gray-100'
                     }`}

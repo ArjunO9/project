@@ -35,20 +35,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       
-      {/* ISI Logo Section */}
-      <section className="py-8 bg-white">
-        <div className="container-custom text-center">
-          <div className="flex justify-center items-center">
-            <div className="bg-gray-100 p-4 rounded-lg inline-block">
-              <span className="text-lg font-semibold text-gray-700">ISI Certified</span>
-              {/* Placeholder for actual ISI logo */}
-              <div className="w-16 h-16 mx-auto mt-2 bg-gray-200 rounded-full flex items-center justify-center">
-                <span className="font-bold text-gray-500">ISI</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    
       
       {/* Our Mission Section */}
       <section className="section bg-gray-50">
@@ -153,7 +140,6 @@ const HomePage: React.FC = () => {
                   number={step.id}
                   title={step.title}
                   description={step.description}
-                  videoUrl={step.videoUrl}
                 />
               ))}
             </div>
@@ -165,7 +151,7 @@ const HomePage: React.FC = () => {
                   number={step.id}
                   title={step.title}
                   description={step.description}
-                  videoUrl={step.videoUrl}
+                  VideoUrl={step.video}
                 />
               ))}
             </div>
