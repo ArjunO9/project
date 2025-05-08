@@ -1,22 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Map } from 'lucide-react';
+import { Map } from 'lucide-react'; // Removed unused Globe import
+import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 import ReviewCard from '../components/ui/ReviewCard';
 import { markets } from '../data/markets';
 import { reviews } from '../data/reviews';
 
-// Define the Market interface to match your data structure
-interface Market {
+// Type declarations for react-simple-maps
+declare module 'react-simple-maps' {
+  interface Geography {
+    rsmKey: string;
+    properties: Record<string, unknown>;
+  }
+}
+
+interface GeoFeature {
+  rsmKey: string;
+  properties: Record<string, unknown>;
+}
+
+interface GeographiesChildProps {
+  geographies: GeoFeature[];
+}
+
+interface MarketLocation {
+  id: string;
   name: string;
   type: 'india' | 'abroad';
-  // Add these missing properties
-  id: string;
   coordinates: [number, number];
   country: string;
 }
 
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
 const MarketExpansionPage: React.FC = () => {
   const [hoveredMarket, setHoveredMarket] = useState<string | null>(null);
-  const [selectedMarket, setSelectedMarket] = useState<Market | null>(null);
+  const [selectedMarket, setSelectedMarket] = useState<MarketLocation | null>(null);
 
   useEffect(() => {
     document.title = 'Market Expansion - Rajdhani Minerals';
@@ -26,7 +44,7 @@ const MarketExpansionPage: React.FC = () => {
     }
   }, []);
 
-  const handleMarketClick = (market: Market) => {
+  const handleMarketClick = (market: MarketLocation) => {
     setSelectedMarket(market);
   };
 
@@ -44,7 +62,7 @@ const MarketExpansionPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Locations List Section */}
+      {/* Map Section */}
       <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -54,9 +72,9 @@ const MarketExpansionPage: React.FC = () => {
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {markets.map((market) => (
                   <div
-                    key={market.name} 
+                    key={market.id}
                     className={`p-2 rounded cursor-pointer transition-colors ${
-                      selectedMarket?.name === market.name ? 'bg-blue-100' : 'hover:bg-gray-100'
+                      selectedMarket?.id === market.id ? 'bg-blue-100' : 'hover:bg-gray-100'
                     }`}
                     onClick={() => handleMarketClick(market)}
                   >
@@ -67,23 +85,68 @@ const MarketExpansionPage: React.FC = () => {
                         }`}
                       ></div>
                       <span>{market.name}</span>
-                      {/* Remove country if it doesn't exist in your data */}
-                      <span className="ml-auto text-sm text-gray-500">
-                        {market.type === 'india' ? 'India' : 'International'}
-                      </span>
+                      <span className="ml-auto text-sm text-gray-500">{market.country}</span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Map Placeholder - Removed react-simple-maps */}
+            {/* Map Container */}
             <div className="lg:w-2/3">
-              <div className="bg-white p-4 rounded-lg h-80 overflow-hidden flex items-center justify-center border border-gray-200">
-                <div className="text-center">
-                  <Map className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-500">Map visualization coming soon</p>
-                </div>
+              <div className="bg-white p-4 rounded-lg h-120 overflow-hidden">
+                <ComposableMap
+                  projection="geoMercator"
+                  width={800}
+                  height={400}
+                  projectionConfig={{
+                    scale: 100,
+                    center: [20, 20],
+                  }}
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <Geographies geography={geoUrl}>
+                    {({ geographies }: GeographiesChildProps) =>
+                      geographies.map((geo: GeoFeature) => (
+                        <Geography
+                          key={geo.rsmKey}
+                          geography={geo}
+                          fill="#EAEAEC"
+                          stroke="#D6D6DA"
+                          strokeWidth={0.5}
+                        />
+                      ))
+                    }
+                  </Geographies>
+                  {markets.map((market) => (
+                    <Marker key={market.id} coordinates={market.coordinates}>
+                      <circle
+                        r={4}
+                        fill={market.type === 'india' ? '#3B82F6' : '#10B981'}
+                        stroke="#FFF"
+                        strokeWidth={1}
+                        onMouseEnter={() => setHoveredMarket(market.id)}
+                        onMouseLeave={() => setHoveredMarket(null)}
+                        className="cursor-pointer transition-all hover:r-5"
+                      />
+                      {(hoveredMarket === market.id || selectedMarket?.id === market.id) && (
+                        <text
+                          textAnchor="middle"
+                          y={-10}
+                          style={{
+                            fontFamily: 'system-ui',
+                            fill: '#1F2937',
+                            fontSize: '10px',
+                            fontWeight: '500',
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          {market.name}
+                        </text>
+                      )}
+                    </Marker>
+                  ))}
+                </ComposableMap>
               </div>
             </div>
           </div>

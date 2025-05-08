@@ -140,6 +140,7 @@ const HomePage: React.FC = () => {
                   number={step.id}
                   title={step.title}
                   description={step.description}
+                  videoUrl={step.videoUrl}
                 />
               ))}
             </div>
