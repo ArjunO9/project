@@ -1,26 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Map } from 'lucide-react'; // Removed unused Globe import
+import { Map } from 'lucide-react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 import ReviewCard from '../components/ui/ReviewCard';
 import { markets } from '../data/markets';
 import { reviews } from '../data/reviews';
-
-// Type declarations for react-simple-maps
-declare module 'react-simple-maps' {
-  interface Geography {
-    rsmKey: string;
-    properties: Record<string, unknown>;
-  }
-}
-
-interface GeoFeature {
-  rsmKey: string;
-  properties: Record<string, unknown>;
-}
-
-interface GeographiesChildProps {
-  geographies: GeoFeature[];
-}
+import indiaGeo from '../data/india.json';
 
 interface MarketLocation {
   id: string;
@@ -30,11 +14,18 @@ interface MarketLocation {
   country: string;
 }
 
+// Define GeoFeature interface for react-simple-maps
+interface GeoFeature {
+  rsmKey: string;
+  properties: Record<string, unknown>;
+}
+
 const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
 const MarketExpansionPage: React.FC = () => {
   const [hoveredMarket, setHoveredMarket] = useState<string | null>(null);
   const [selectedMarket, setSelectedMarket] = useState<MarketLocation | null>(null);
+  const [mapView, setMapView] = useState<'india' | 'global'>('india');
 
   useEffect(() => {
     document.title = 'Market Expansion - Rajdhani Minerals';
@@ -47,6 +38,10 @@ const MarketExpansionPage: React.FC = () => {
   const handleMarketClick = (market: MarketLocation) => {
     setSelectedMarket(market);
   };
+
+  const filteredMarkets = markets.filter(market => 
+    mapView === 'india' ? market.type === 'india' : true
+  );
 
   return (
     <div className="bg-gray-50">
@@ -66,15 +61,15 @@ const MarketExpansionPage: React.FC = () => {
       <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Locations List */}
-            <div className="lg:w-1/3 bg-gray-50 p-4 rounded-lg">
+          <div className="lg:w-1/3 bg-gray-50 p-4 rounded-lg">
+          {/* Market List */}
               <h3 className="text-xl font-semibold mb-4 border-b pb-2">Our Locations</h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {markets.map((market) => (
                   <div
-                    key={market.id}
+                    key={market.name} 
                     className={`p-2 rounded cursor-pointer transition-colors ${
-                      selectedMarket?.id === market.id ? 'bg-blue-100' : 'hover:bg-gray-100'
+                      selectedMarket?.name === market.name ? 'bg-blue-100' : 'hover:bg-gray-100'
                     }`}
                     onClick={() => handleMarketClick(market)}
                   >
@@ -85,7 +80,10 @@ const MarketExpansionPage: React.FC = () => {
                         }`}
                       ></div>
                       <span>{market.name}</span>
-                      <span className="ml-auto text-sm text-gray-500">{market.country}</span>
+                      {/* Remove country if it doesn't exist in your data */}
+                      <span className="ml-auto text-sm text-gray-500">
+                        {market.type === 'india' ? 'India' : 'International'}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -94,31 +92,58 @@ const MarketExpansionPage: React.FC = () => {
 
             {/* Map Container */}
             <div className="lg:w-2/3">
-              <div className="bg-white p-4 rounded-lg h-120 overflow-hidden">
+              <div className="bg-white p-4 rounded-lg h-120 overflow-hidden relative">
+                {/* Toggle Switch */}
+                <div className="absolute top-4 right-4 z-10 flex bg-white rounded-full shadow-md">
+                  <button
+                    onClick={() => setMapView('india')}
+                    className={`px-4 py-2 rounded-full transition-colors ${
+                      mapView === 'india' ? 'bg-blue-600 text-white' : 'text-gray-700'
+                    }`}
+                  >
+                    National
+                  </button>
+                  <button
+                    onClick={() => setMapView('global')}
+                    className={`px-4 py-2 rounded-full transition-colors ${
+                      mapView === 'global' ? 'bg-blue-600 text-white' : 'text-gray-700'
+                    }`}
+                  >
+                    Global
+                  </button>
+                </div>
+
                 <ComposableMap
-                  projection="geoMercator"
+                  projection={mapView === 'india' ? 'geoMercator' : 'geoEqualEarth'}
                   width={800}
                   height={400}
-                  projectionConfig={{
-                    scale: 100,
-                    center: [20, 20],
-                  }}
+                  projectionConfig={
+                    mapView === 'india'
+                      ? {
+                          scale: 600,
+                          center: [78, 22],
+                        }
+                      : {
+                          scale: 150,
+                          center: [20, 20],
+                        }
+                  }
                   style={{ width: '100%', height: '100%' }}
                 >
-                  <Geographies geography={geoUrl}>
-                    {({ geographies }: GeographiesChildProps) =>
-                      geographies.map((geo: GeoFeature) => (
+                  <Geographies geography={mapView === 'india' ? indiaGeo : geoUrl}>
+                    {({ geographies }) =>
+                      geographies.map((geo) => (
                         <Geography
                           key={geo.rsmKey}
                           geography={geo}
-                          fill="#EAEAEC"
-                          stroke="#D6D6DA"
+                          fill={mapView === 'india' ? '#EAEAEC' : '#EAEAEC'}
+                          stroke={mapView === 'india' ? '#D6D6DA' : '#D6D6DA'}
                           strokeWidth={0.5}
                         />
                       ))
                     }
                   </Geographies>
-                  {markets.map((market) => (
+                  {filteredMarkets.map((market) => (
                     <Marker key={market.id} coordinates={market.coordinates}>
                       <circle
                         r={4}
@@ -128,6 +153,7 @@ const MarketExpansionPage: React.FC = () => {
                         onMouseEnter={() => setHoveredMarket(market.id)}
                         onMouseLeave={() => setHoveredMarket(null)}
                         className="cursor-pointer transition-all hover:r-5"
+                        onClick={() => handleMarketClick(market)}
                       />
                       {(hoveredMarket === market.id || selectedMarket?.id === market.id) && (
                         <text

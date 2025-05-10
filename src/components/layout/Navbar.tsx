@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import { products as productList } from '../../data/products';
+import ISO from '../../assets/pics/ISO.png';
+import { motion } from 'framer-motion';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,12 +11,32 @@ const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   
-  const handleProductClick = () => {
-    navigate('/products');
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsProductOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const toggleProductDropdown = () => {
+    setIsProductOpen(!isProductOpen);
+  };
+
+  const handleProductItemClick = (path: string) => {
+    navigate(path);
     setIsProductOpen(false);
+    setIsOpen(false); // Close mobile menu if open
   };
   
   // For tiles adhesive page, use a different style
@@ -44,25 +67,36 @@ const Navbar: React.FC = () => {
     ? 'navbar-link-active bg-blue-500 text-white'
     : 'navbar-link-active';
   
-  const products = [
-    { name: 'RMP Non Premix', path: '/products#non-premix' },
-    { name: 'RMP Premix (with boron oxide)', path: '/products#boron-oxide' },
-    { name: 'RMP Premix (with boric acid)', path: '/products#boric-acid' },
-    { name: '150 Mesh Powder', path: '/products#150-mesh' },
-    { name: '0 to 6 mm Quartz Stone', path: '/products#quartz-stone' },
-    { name: '30-80 mm Powder', path: '/products#30-80-powder' },
-  ];
+  const products = productList.map(product => ({
+    name: product.name,
+    path: `/products#${product.id}`
+  }));
   
   return (
     <nav className={`sticky top-0 z-40 px-4 py-3 ${navbarClass}`}>
       <div className="container-custom flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
-          <span className={`text-2xl font-bold ${isTilesPage ? 'text-white' : 'text-gray-800'}`}>
-            Rajdhani Minerals
-          </span>
-        </Link>
-        
+        {/* Combined Logo Container */}
+        <div className="flex items-center gap-4"> {/* Increased gap */}
+          <Link to="/" className="flex items-center space-x-2">
+            <span className={`text-2xl font-bold ${isTilesPage ? 'text-white' : 'text-gray-800'}`}>
+              Rajdhani Minerals
+            </span>
+          </Link>
+          
+          {/* ISO Logo - Properly sized */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="h-16 w-16" // Medium size (64px)
+          >
+            <img 
+              src={ISO} 
+              alt="ISO 9001:2015 Certified"
+              className="h-full w-full object-contain"
+            />
+          </motion.div>
+        </div>
+         {/* Desktop Menu */}           
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-1">
           <NavLink 
@@ -76,25 +110,34 @@ const Navbar: React.FC = () => {
           </NavLink>
           
           {/* Products Dropdown */}
-          <div className="relative group">
+          <div 
+            className="relative group"
+            onMouseEnter={() => setIsProductOpen(true)}
+            onMouseLeave={() => setIsProductOpen(false)}
+          >
             <button 
               className={`${linkClass} flex items-center`}
-              onClick={handleProductClick}
+              onClick={() => navigate('/products')}
             >
               Products <ChevronDown className="ml-1 h-4 w-4" />
             </button>
             
-            <div className={`dropdown transform ${isProductOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'} transition-all duration-200 origin-top-right`}>
-              {products.map((product, index) => (
-                <Link
-                  key={index}
-                  to={product.path}
-                  className="dropdown-item"
-                  onClick={() => setIsProductOpen(false)}
-                >
-                  {product.name}
-                </Link>
-              ))}
+            <div className={`absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 ${isProductOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+              <div className="py-1">
+                {products.map((product, index) => (
+                  <Link
+                    key={index}
+                    to={product.path}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsProductOpen(false);
+                    }}
+                  >
+                    {product.name}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
           
@@ -161,9 +204,9 @@ const Navbar: React.FC = () => {
           <div>
             <button 
               className={`block w-full text-left ${linkClass} flex items-center justify-between`}
-              onClick={handleProductClick}
+              onClick={() => setIsProductOpen(!isProductOpen)}
             >
-              Products <ChevronDown className="ml-1 h-4 w-4" />
+              Products <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${isProductOpen ? 'rotate-180' : ''}`} />
             </button>
             
             <div className={`pl-4 ${isProductOpen ? 'block' : 'hidden'}`}>
@@ -172,7 +215,10 @@ const Navbar: React.FC = () => {
                   key={index}
                   to={product.path}
                   className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md my-1"
-                  onClick={toggleMenu}
+                  onClick={() => {
+                    toggleMenu();
+                    setIsProductOpen(false);
+                  }}
                 >
                   {product.name}
                 </Link>

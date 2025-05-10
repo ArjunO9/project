@@ -303,7 +303,7 @@ const TilesAdhesivePage: React.FC = () => {
             <div className="lg:w-1/2 order-1 lg:order-2">
               <div className="relative rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.pexels.com/photos/6419168/pexels-photo-6419168.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
+                  src="https://images.pexels.com/photos/4503812/pexels-photo-4503812.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
                   alt="Applying Tiles Adhesive" 
                   className="w-full"
                 />

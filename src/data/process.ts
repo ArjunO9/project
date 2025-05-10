@@ -23,7 +23,7 @@ export const processSteps: ProcessStep[] = [
     id: 3,
     title: 'Crushing and Grinding',
     description: 'Processing raw materials through our advanced crushing and grinding equipment to achieve the desired particle size distribution.',
-    videoUrl: './assets/videos/crushing & grinding.mp4' // Placeholder for actual video URL
+    videoUrl: crushingVideo // Placeholder for actual video URL
   },
   {
     id: 4,
