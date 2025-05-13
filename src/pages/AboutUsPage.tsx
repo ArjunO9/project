@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Calendar, Mail, Phone, MapPin } from 'lucide-react';
 import ContactForm from '../components/ui/ContactForm';
- import founderpic from '../assets/pics/amit Khandelwal.jpg';  
+import founderpic from '../assets/pics/amit khandelwal.jpg';  
+
 const AboutUsPage: React.FC = () => {
   useEffect(() => {
     // Update the document title
@@ -88,7 +89,7 @@ const AboutUsPage: React.FC = () => {
             <div className="lg:w-1/3">
               <div className="rounded-lg overflow-hidden">
                 <img 
-                  src= {founderpic}
+                  src={founderpic}
                   alt="Amit Khandelwal" 
                   className="w-full h-full object-cover"
                 />
