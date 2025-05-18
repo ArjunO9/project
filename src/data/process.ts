@@ -1,4 +1,5 @@
 import crushingVideo from '../assets/videos/crushing & grinding.mp4';
+import mixingVideo from '../assets/videos/IMG_3099.mp4';
 export interface ProcessStep {
   id: number;
   title: string;
@@ -29,7 +30,7 @@ export const processSteps: ProcessStep[] = [
     id: 4,
     title: 'Mixing and Blending',
     description: 'Precisely mixing and blending different components according to specific formulations to create our range of ramming mass powders.',
-    videoUrl: '/videos/step4.mp4' // Placeholder for actual video URL
+    videoUrl: mixingVideo // Placeholder for actual video URL
   },
   {
     id: 5,
