@@ -29,15 +29,6 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
-  const toggleProductDropdown = () => {
-    setIsProductOpen(!isProductOpen);
-  };
-
-  const handleProductItemClick = (path: string) => {
-    navigate(path);
-    setIsProductOpen(false);
-    setIsOpen(false); // Close mobile menu if open
-  };
   
   // For tiles adhesive page, use a different style
   const isTilesPage = location.pathname === '/tiles-adhesive';
@@ -87,7 +78,7 @@ const Navbar: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="h-16 w-16" // Medium size (64px)
+            className="h-20 w-20px" // Medium size (64px)
           >
             <img 
               src={ISO} 

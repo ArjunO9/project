@@ -130,7 +130,7 @@ const AboutUsPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold">Address</h3>
-                    <p className="text-gray-600">Industrial Area, Rajasthan, India</p>
+                    <p className="text-gray-600">E61, RIICO Industrial Area, Baapi , Dausa, Rajasthan, India(303507)</p>
                   </div>
                 </div>
                 
@@ -140,7 +140,7 @@ const AboutUsPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold">Phone</h3>
-                    <p className="text-gray-600">+91 12345 67890</p>
+                    <p className="text-gray-600">+91 83860 40009</p>
                   </div>
                 </div>
                 
@@ -150,7 +150,7 @@ const AboutUsPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold">Email</h3>
-                    <p className="text-gray-600">rajdhaniminerals@gmail.com</p>
+                    <p className="text-gray-600">info.rajdhaniminerals@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -160,12 +160,8 @@ const AboutUsPage: React.FC = () => {
                 <table className="w-full text-gray-700">
                   <tbody>
                     <tr className="border-b border-gray-200">
-                      <td className="py-2">Monday - Friday</td>
-                      <td className="py-2">9:00 AM - 6:00 PM</td>
-                    </tr>
-                    <tr className="border-b border-gray-200">
-                      <td className="py-2">Saturday</td>
-                      <td className="py-2">9:00 AM - 1:00 PM</td>
+                      <td className="py-2">Monday - Saturday</td>
+                      <td className="py-2">9:00 AM - 8:00 PM</td>
                     </tr>
                     <tr>
                       <td className="py-2">Sunday</td>
